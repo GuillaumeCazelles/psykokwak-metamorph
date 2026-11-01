@@ -2,7 +2,7 @@
 
 src/cards.json   one entry per binder slot (TCGdex details, Cardmarket FR/EN product, Japanese equivalent product)
 src/prices.json  Cardmarket prices scraped per language: "idProduct_lang" -> {n, p: 5 cheapest Near Mint offers}
-                 (lang 2 = French, 7 = Japanese; first editions / reverses excluded)
+                 (lang 1 = English, 2 = French, 7 = Japanese; first editions / reverses excluded)
 src/pg.json      Cardmarket public price guide (all languages), downloaded on each run (not committed, 15 MB)
 ../img/          images for cards TCGdex has no picture of (Japanese exclusives, recent promos, cameos)
 """
@@ -139,12 +139,12 @@ PRICES = {}
 for c in CARDS:
     cm = c.get("cm")
     if not cm: continue
-    lang_code = {"fr": 2, "ja": 7}.get(c["l"])
+    lang_code = {"fr": 2, "en": 1, "ja": 7}[c["l"]]
     sc = SCRAPED.get(f"{cm}_{lang_code}") if lang_code else None
     pg = PG.get(cm) or {}
     entry = {"g": [pg.get("avg30"), pg.get("trend"), pg.get("low")]}
     if sc is not None:
-        vals = sc["p"][:5]
+        vals = [v for v in sc["p"][:5] if v <= 4 * sc["p"][0]]  # drop placeholder prices (e.g. 9001 €)
         entry["s"] = [round(sum(vals) / len(vals), 2) if vals else None, len(vals), sc.get("nall", len(vals))]
     PRICES[f"{c['l']}:{cm}"] = entry
     c["pk"] = f"{c['l']}:{cm}"
