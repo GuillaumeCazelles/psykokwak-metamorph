@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Psykokwak & Métamorph">
+<meta name="theme-color" content="#F6F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16110D" media="(prefers-color-scheme: dark)">
+<title>Psykokwak & Métamorph</title>
+<link rel="apple-touch-icon" sizes="180x180" href="__ICON__">
+<link rel="icon" type="image/png" href="__ICON__">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Same binder language as "Ponyta & Galopa": one binder page per card, one pocket per language.
+   Owned pockets get a coloured frame. */
+:root{
+  --bg:#F6F1EA; --page:#FFFFFF; --pocket:#EFE7DC; --ink:#2A1A10; --muted:#7A6455; --line:#E3D6C6;
+  --frame:#E9A800; --frame-2:#FFE066; --frame-ink:#7A5600; --good:#2E8B5E; --danger:#C9443A;
+  --cameo:#B58AE0;
+  --l-fr:#2F5BD3; --l-en:#B4233A; --l-ja:#D23C3C; --l-zh:#C98A00;
+  --shadow:0 1px 2px rgba(42,26,16,.08),0 6px 20px rgba(42,26,16,.06);
+  --f-display:"Bricolage Grotesque",ui-rounded,system-ui,sans-serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16110D; --page:#211913; --pocket:#2B211A; --ink:#F4EAE0; --muted:#B49C8A; --line:#3A2D23;
+    --frame:#F5C518; --frame-2:#FFE27A; --frame-ink:#FFD55A; --good:#53C08B; --danger:#EE6A5F; --cameo:#C9A4F0;
+    --l-fr:#7C9BFF; --l-en:#FF7A8E; --l-ja:#FF8A7A; --l-zh:#F2C14E;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16110D; --page:#211913; --pocket:#2B211A; --ink:#F4EAE0; --muted:#B49C8A; --line:#3A2D23;
+  --frame:#F5C518; --frame-2:#FFE27A; --frame-ink:#FFD55A; --good:#53C08B; --danger:#EE6A5F; --cameo:#C9A4F0;
+  --l-fr:#7C9BFF; --l-en:#FF7A8E; --l-ja:#FF8A7A; --l-zh:#F2C14E;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 var(--f-body);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--frame);outline-offset:2px}
+
+/* Header */
+.top{background:var(--bg);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;border-bottom:1px solid var(--line)}
+.wrap{max-width:1180px;margin:0 auto}
+.row1{display:flex;align-items:center;gap:12px}
+.brand{font:800 22px/1 var(--f-display);letter-spacing:-.01em;margin:0;flex:1;min-width:0}
+.brand small{display:block;font:500 12px/1.3 var(--f-body);color:var(--muted);letter-spacing:0;margin-top:3px}
+.iconbtn{border:1px solid var(--line);background:var(--page);border-radius:12px;height:40px;min-width:40px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-weight:600;font-size:14px}
+.progress{margin-top:10px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center}
+.count{font:800 26px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.count span{font-size:15px;color:var(--muted);font-weight:600}
+.bar{height:10px;border-radius:99px;background:var(--pocket);overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--frame-2),var(--frame));transition:width .4s ease}
+.stats{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted)}
+.stats b{color:var(--ink);font-family:var(--f-mono);font-weight:700;font-size:12px}
+.tools{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.search{display:flex;gap:8px}
+.search input{flex:1;min-width:0;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--page);color:var(--ink);padding:0 14px;font:500 16px var(--f-body)}
+.search select{height:42px;border-radius:12px;border:1px solid var(--line);background:var(--page);color:var(--ink);padding:0 8px;font:500 14px var(--f-body);max-width:42%}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--page);border-radius:99px;height:32px;padding:0 12px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip.sep{margin-left:8px}
+.chip .n{font:500 11px var(--f-mono);opacity:.75}
+.lg{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:18px;padding:0 5px;border-radius:5px;font:700 10.5px/1 var(--f-mono);color:#fff;letter-spacing:.02em}
+.lg.fr{background:var(--l-fr)} .lg.en{background:var(--l-en)} .lg.ja{background:var(--l-ja)} .lg.zh{background:var(--l-zh);color:#2a1a00}
+.chip[aria-pressed="false"] .lg{opacity:.45}
+
+/* Binder */
+main{padding:16px 16px calc(96px + env(safe-area-inset-bottom,0px))}
+.pages{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px;align-items:start}
+.bpage{background:var(--page);border:1px solid var(--line);border-radius:14px;padding:10px 10px 12px;box-shadow:var(--shadow);content-visibility:auto;contain-intrinsic-size:auto 420px}
+.bpage.cameo{border-top:4px solid var(--cameo)}
+.bpage h2 i.cm{font-style:normal;font:700 10px var(--f-body);color:var(--cameo);text-transform:uppercase;letter-spacing:.06em;margin-left:6px}
+.bpage h2{margin:0 2px 2px;font:800 17px/1.15 var(--f-display);display:flex;gap:8px;align-items:baseline;justify-content:space-between}
+.bpage h2 span{font:500 11px var(--f-mono);color:var(--muted);white-space:nowrap}
+.bpage h2 em{font-style:normal;color:var(--good)}
+.bpage .sub{margin:0 2px 8px;font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pocket{position:relative;border:0;background:none;padding:0;text-align:left;cursor:pointer;min-width:0;-webkit-tap-highlight-color:transparent}
+.pocket .im{position:relative;display:block;aspect-ratio:63/88;border-radius:8px;background:var(--pocket);border:1.5px dashed var(--line);overflow:hidden}
+.pocket .im img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) opacity(.42);transition:filter .2s}
+.pocket .im .ph{position:absolute;inset:0;display:grid;place-items:center;padding:6px;text-align:center;font:600 11px/1.2 var(--f-body);color:var(--muted)}
+.pocket .im img.alt{object-position:center}
+.pocket .lg{position:absolute;top:5px;left:5px;z-index:2;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.pocket .vt{position:absolute;left:4px;right:4px;bottom:4px;z-index:2;background:rgba(20,12,6,.72);color:#fff;border-radius:5px;padding:2px 4px;font:600 10px/1.2 var(--f-body);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pocket .bk{display:block;margin-top:4px;font:500 11px/1.25 var(--f-body);color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.5em}
+.pocket .bk b{color:var(--ink);font-weight:600}
+.pocket .info{position:absolute;top:3px;right:3px;z-index:3;width:26px;height:26px;border-radius:50%;border:0;background:rgba(20,12,6,.55);color:#fff;font:700 13px/26px var(--f-display);text-align:center;cursor:pointer;padding:0}
+.pocket.own .im{border:3px solid var(--frame);box-shadow:0 0 0 1px var(--frame-2) inset}
+.pocket.own .im img{filter:none}
+.pocket.own .im::after{content:"";position:absolute;bottom:24px;right:5px;z-index:2;width:18px;height:18px;border-radius:50%;background:var(--good) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.3l2.6 2.5L12 5.4' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.pocket.flash .im{animation:flash .5s ease}
+.pocket{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.pocket img{-webkit-user-drag:none;pointer-events:none}
+.pocket .im{transition:transform .35s ease}
+.pocket.holding .im{transform:scale(.94)}
+
+/* Zoom (long press) */
+.zoom{position:fixed;inset:0;z-index:50;background:rgba(10,6,3,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:calc(env(safe-area-inset-top,0px) + 16px) 16px calc(env(safe-area-inset-bottom,0px) + 16px);
+  opacity:0;transition:opacity .18s ease;overscroll-behavior:contain;touch-action:none}
+.zoom.on{opacity:1}
+.zoom .zc{width:min(100%,420px,calc((100dvh - 290px) * 63 / 88));aspect-ratio:63/88;border-radius:4.5%/3.2%;overflow:hidden;background:var(--pocket);box-shadow:0 20px 60px rgba(0,0,0,.6);
+  transform:scale(.9);transition:transform .22s cubic-bezier(.2,.8,.2,1);display:grid;place-items:center;flex:none}
+.zoom.on .zc{transform:none}
+.zoom .zc img{width:100%;height:100%;object-fit:cover;display:block}
+.zoom .zc .ph{color:var(--muted);font-weight:600;padding:16px;text-align:center}
+.zoom .zi{width:min(100%,420px);color:#F7EEE6;font-size:13.5px;line-height:1.35}
+.zoom .zi h3{margin:0 0 4px;font:800 21px/1.1 var(--f-display);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.zoom .zi p{margin:2px 0;color:#D6C5B6}
+.zoom .zi b{color:#fff}
+.zoom .zi .zp{font:700 15px var(--f-mono);color:#fff}
+.zoom .zb{display:flex;gap:8px;margin-top:10px}
+.zoom .zb button{flex:1;height:44px;border-radius:12px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font-weight:700;cursor:pointer}
+.zoom .zb button.is{background:var(--frame);border-color:var(--frame);color:#2a1300}
+.zoom .zx{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:16px;cursor:pointer}
+@keyframes flash{0%{transform:scale(1)}40%{transform:scale(1.07)}100%{transform:scale(1)}}
+.unc{color:var(--frame-ink);font-weight:700}
+.empty{text-align:center;color:var(--muted);padding:48px 16px}
+.hint{margin:0 0 12px;font-size:13px;color:var(--muted)}
+.hint:empty{display:none}
+
+/* Tab bar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(3,1fr);background:color-mix(in srgb,var(--page) 92%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+.tabbar button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;font-size:11.5px;font-weight:600;color:var(--muted);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tabbar svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabbar button[aria-current="page"]{color:var(--ink)}
+.tabbar button[aria-current="page"] svg{stroke:var(--ink);fill:color-mix(in srgb,var(--frame) 45%,transparent)}
+
+/* Prices tab */
+.psum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:12px;max-width:820px}
+.psum div{background:var(--page);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.psum small{display:block;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.psum b{font:700 19px var(--f-mono)}
+.plist{display:flex;flex-direction:column;gap:6px;max-width:820px}
+.plist h3{margin:16px 0 4px;font:700 13px var(--f-body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.prow{width:100%;border:1px solid var(--line);background:var(--page);border-radius:12px;display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;padding:6px 12px 6px 6px;text-align:left;cursor:pointer;content-visibility:auto;contain-intrinsic-size:auto 68px}
+.prow img,.prow .th{width:40px;aspect-ratio:63/88;border-radius:4px;background:var(--pocket);object-fit:cover;display:block}
+.prow .t{min-width:0}
+.prow .t b{display:block;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .t small{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .t i{font-style:normal;color:var(--good);font-weight:700}
+.prow .r{text-align:right;font:700 14px var(--f-mono);white-space:nowrap}
+.prow .r small{display:block;font:500 11px var(--f-mono);color:var(--muted)}
+.prow.mine{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
+.pnote{font-size:12.5px;color:var(--muted);max-width:820px;margin:12px 0 0}
+
+/* Sheet */
+.scrim{position:fixed;inset:0;background:rgba(14,8,4,.5);z-index:40;opacity:0;transition:opacity .2s}
+.scrim.on{opacity:1}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--page);border-radius:20px 20px 0 0;max-height:92vh;max-height:92dvh;overflow-y:auto;overscroll-behavior:contain;
+  transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.8,.2,1);padding:0 16px calc(24px + env(safe-area-inset-bottom,0px));max-width:760px;margin:0 auto;box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+.sheet.on{transform:none}
+.grab{position:sticky;top:0;background:var(--page);padding:10px 0 6px;display:flex;justify-content:space-between;align-items:center;z-index:2}
+.grab::before{content:"";position:absolute;left:50%;top:6px;width:40px;height:4px;border-radius:9px;background:var(--line);transform:translateX(-50%)}
+.hero{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:start}
+.hero .art{width:150px;aspect-ratio:63/88;border-radius:10px;background:var(--pocket);overflow:hidden;display:grid;place-items:center;box-shadow:var(--shadow)}
+.hero .art img{width:100%;height:100%;object-fit:cover}
+.hero h3{margin:4px 0 2px;font:800 26px/1.05 var(--f-display);text-wrap:balance}
+.meta{font-size:13px;color:var(--muted);margin-top:4px}
+.meta b{font-family:var(--f-mono);color:var(--ink)}
+dl.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:14px 0 0;font-size:13.5px}
+dl.facts dt{color:var(--muted)}
+dl.facts dd{margin:0;font-weight:600}
+.ownbtn{margin-top:14px;width:100%;height:50px;border-radius:14px;border:2px solid var(--frame);background:transparent;font:700 16px var(--f-body);cursor:pointer}
+.ownbtn.is{background:var(--frame);color:#2a1300}
+.pricebox{margin-top:14px;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px}
+.pricebox .big{font:700 22px var(--f-mono)}
+.pricebox .lbl{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.link{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px;background:none;border:0;padding:0;cursor:pointer;font-size:13px}
+.note{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+.sibs{margin-top:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.sibs .pocket .bk{min-height:0;-webkit-line-clamp:1}
+.panel h3{margin:4px 0 6px;font:800 22px var(--f-display)}
+.panel h4{margin:18px 0 6px;font-size:14px}
+.panel p{margin:0 0 8px;color:var(--muted);font-size:13.5px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.btn{height:42px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--pocket);font-weight:600;cursor:pointer}
+.btn.danger{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 40%,var(--line))}
+textarea{width:100%;min-height:90px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:10px;font:12px var(--f-mono)}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,40px);opacity:0;z-index:60;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;font-size:14px;transition:.2s;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.on{transform:translate(-50%,0);opacity:1}
+@media (max-width:380px){ .hero{grid-template-columns:110px 1fr} .hero .art{width:110px} }
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="row1">
+      <h1 class="brand">Psykokwak & Métamorph<small id="sub">Collection · FR · EN · JP</small></h1>
+      <button class="iconbtn" id="menuBtn" aria-label="Sauvegarde et réglages">☰</button>
+    </div>
+    <div class="progress">
+      <div class="count" id="count">0 <span>/ 0</span></div>
+      <div class="bar" aria-hidden="true"><i id="barFill"></i></div>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div class="tools">
+      <div class="search">
+        <input id="q" type="search" placeholder="Carte, set, numéro…" autocomplete="off" enterkeyhint="search" aria-label="Rechercher une carte">
+        <select id="sort" aria-label="Trier"></select>
+      </div>
+      <div class="chips" id="langChips" aria-label="Langues affichées"></div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <p class="hint" id="hint"></p>
+  <div id="list"></div>
+</main>
+<nav class="tabbar" id="tabbar" aria-label="Onglets">
+  <button data-tab="cards"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M9.3 3v18M14.7 3v18"/></svg>Toutes les cartes</button>
+  <button data-tab="coll"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.1A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.8c0 5.5-7.5 10.1-7.5 10.1z"/></svg>Ma collection</button>
+  <button data-tab="prix"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 6.5A6.5 6.5 0 1 0 17 17.5"/><path d="M4 10.5h9M4 13.5h9"/></svg>Prix</button>
+</nav>
+
+<div class="scrim" id="scrim" hidden></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+  <div class="grab"><span></span><button class="iconbtn" id="closeBtn" aria-label="Fermer">✕</button></div>
+  <div id="sheetBody"></div>
+</section>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+"use strict";
+const LANGS = [["fr","Français","FR"],["en","Anglais","EN"],["ja","Japonais","JP"]];
+const LNAME = Object.fromEntries(LANGS.map(([k,n])=>[k,n]));
+const LTAG = Object.fromEntries(LANGS.map(([k,,t])=>[k,t]));
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const eur = v => v == null ? "—" : v.toLocaleString("fr-FR", {style:"currency", currency:"EUR", minimumFractionDigits:2});
+const norm = s => String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const today = () => new Date().toISOString().slice(0,10);
+
+/* ---------- storage ---------- */
+const KEY = "psyditto.collection.v1", UKEY = "psyditto.ui.v1";
+function load(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }
+function save(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } }
+let coll = load(KEY, {owned:{}});        // owned[cardId] = "YYYY-MM-DD"
+let ui = Object.assign({tab:"cards", langs:["fr","en","ja"], poke:"all", missingOnly:false, sort:"date", psort:"date"}, load(UKEY, {}));
+function persist(){ if(!save(KEY, coll)) toast("Impossible d'enregistrer : stockage plein ou bloqué"); }
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch {}
+
+/* ---------- data ---------- */
+// GROUPS[i] = {id, poke, cameo, y, d, t (titre FR), s (sous-titre)} ; CARDS[i] = {id, g, l, n, s, num, r, y, img, cm, pk, np}
+const G = new Map(GROUPS.map(g => [g.id, g]));
+const BY_ID = new Map(CARDS.map(c => [c.id, c]));
+for (const c of CARDS){ c.v = LNAME[c.l]; c.key = norm([c.n, c.s, c.num, c.r, G.get(c.g).t, G.get(c.g).s, LNAME[c.l]].join(" ")); }
+const groupCards = gid => CARDS.filter(c => c.g === gid);
+const GROUP_IMG = new Map();
+for (const c of CARDS) if (c.img && !GROUP_IMG.has(c.g)) GROUP_IMG.set(c.g, c.img);
+for (const c of CARDS) if (c.img && c.l==="en") GROUP_IMG.set(c.g, c.img);
+const imgOf = c => c.img || GROUP_IMG.get(c.g) || "";
+const thumb = u => u && u.includes("assets.tcgdex.net") ? u + "/low.webp" : u;
+const large = u => u && u.includes("assets.tcgdex.net") ? u + "/high.webp" : u;
+
+// PRICES[pk] = {s:[avg of the 5 cheapest Near Mint offers in this language, offers used, offers seen], g:[avg30, trend, low] all languages}
+function priceInfo(c){
+  if (!c.pk || c.np) return null;
+  const r = PRICES[c.pk]; if (!r) return null;
+  if (r.s && r.s[0] != null) return {v:r.s[0], src:"lang", n:r.s[1]};
+  if (r.s && r.s[1] === 0) return {v:null, src:"none"};
+  const v = r.g[0] ?? r.g[1];
+  return v ? {v, src:"guide"} : null;
+}
+function priceOf(c){ const p = priceInfo(c); return p ? p.v : null; }
+function trendOf(c){ if (!c.pk || c.np) return null; const r = PRICES[c.pk]; return r && r.g[1] || null; }
+function priceSrc(c){
+  const p = priceInfo(c); if (!p) return c.np || "";
+  if (p.src==="none") return `aucune offre NM en ${LNAME[c.l].toLowerCase()}`;
+  if (p.src==="lang") return `moy. ${Math.min(p.n,5)} offre${p.n>1?"s":""} NM ${LTAG[c.l]}`;
+  return c.l==="ja" ? "guide des prix (produit japonais)" : "guide des prix, toutes langues";
+}
+const isOwned = c => !!coll.owned[c.id];
+
+/* ---------- header ---------- */
+function visibleCards(){ return CARDS.filter(c => ui.langs.includes(c.l) && pokeOk(c)); }
+function pokeOk(c){
+  const g = G.get(c.g);
+  if (ui.poke==="all") return true;
+  if (ui.poke==="cameo") return g.cameo;
+  return g.poke===ui.poke && !g.cameo;
+}
+function renderStats(){
+  const vis = visibleCards(), own = vis.filter(isOwned).length;
+  $("#count").innerHTML = `${own} <span>/ ${vis.length}</span>`;
+  $("#barFill").style.width = (vis.length ? own/vis.length*100 : 0).toFixed(2)+"%";
+  const per = LANGS.filter(([k])=>ui.langs.includes(k)).map(([k])=>{
+    const a = vis.filter(c=>c.l===k); return `<span><span class="lg ${k}">${LTAG[k]}</span> <b>${a.filter(isOwned).length}/${a.length}</b></span>`;
+  });
+  let val = 0; for (const c of CARDS) if (isOwned(c)) val += priceOf(c) || 0;
+  $("#stats").innerHTML = per.join("") + `<span>Valeur ≈ <b>${eur(val)}</b></span>`;
+}
+
+/* ---------- tabs & filters ---------- */
+const HINTS = {
+  cards: "Touchez une carte pour l'ajouter à votre collection, touchez-la encore pour la retirer. Maintenez-la appuyée pour l'agrandir.",
+  coll: "Les cartes que vous possédez. Touchez une carte pour ouvrir sa fiche, maintenez-la pour l'agrandir.",
+  prix: "Prix Cardmarket en euros, par langue. Touchez une carte pour ouvrir sa fiche."
+};
+const SORTS = {
+  cards: [["date","Chronologique"],["poke","Par Pokémon"],["set","Par carte A→Z"]],
+  coll:  [["date","Chronologique"],["added","Ajout récent"],["poke","Par Pokémon"]],
+  prix:  [["date","Chronologique"],["desc","Prix ↓"],["asc","Prix ↑"]]
+};
+function setTab(t){
+  ui.tab = t; save(UKEY, ui);
+  $$("#tabbar button").forEach(b => { if (b.dataset.tab===t) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+  $("#hint").textContent = HINTS[t];
+  const key = t==="prix" ? "psort" : "sort";
+  const opts = SORTS[t]; if (!opts.some(([k])=>k===ui[key])) ui[key] = opts[0][0];
+  $("#sort").innerHTML = opts.map(([k,l])=>`<option value="${k}">${l}</option>`).join("");
+  $("#sort").value = ui[key];
+  $("#langChips").hidden = t==="prix";
+  renderChips(); renderList(); window.scrollTo(0,0);
+}
+$("#tabbar").addEventListener("click", e => { const b = e.target.closest("button"); if (b) setTab(b.dataset.tab); });
+function renderChips(){
+  $("#langChips").innerHTML = LANGS.map(([k,n,t]) => {
+    const a = CARDS.filter(c=>c.l===k);
+    return `<button class="chip" data-l="${k}" aria-pressed="${ui.langs.includes(k)}"><span class="lg ${k}">${t}</span>${n} <span class="n">${a.filter(isOwned).length}/${a.length}</span></button>`;
+  }).join("");
+  const pk = [["all","Tous"],["psy","Psykokwak"],["ditto","Métamorph"],["cameo","Caméos"]];
+  const miss = ui.tab==="cards" ? `<button class="chip" data-m="1" aria-pressed="${ui.missingOnly}">Manquantes seulement</button>` : "";
+  $("#chips").innerHTML = miss + pk.map(([k,l],i)=>`<button class="chip${i===0&&miss?" sep":""}" data-p="${k}" aria-pressed="${ui.poke===k}">${l}</button>`).join("");
+}
+$("#langChips").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if(!b) return;
+  const l = b.dataset.l, on = ui.langs.includes(l);
+  if (on && ui.langs.length===1){ ui.langs = LANGS.map(([k])=>k); toast("Toutes les langues affichées"); }
+  else ui.langs = on ? ui.langs.filter(x=>x!==l) : LANGS.map(([k])=>k).filter(k=>k===l||ui.langs.includes(k));
+  save(UKEY, ui); renderChips(); renderStats(); renderList();
+});
+$("#langChips").addEventListener("dblclick", e => { // double-tap a language to show it alone
+  const b = e.target.closest(".chip"); if(!b) return;
+  ui.langs = [b.dataset.l]; save(UKEY, ui); renderChips(); renderStats(); renderList();
+});
+$("#chips").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if(!b) return;
+  if (b.dataset.m) ui.missingOnly = !ui.missingOnly; else ui.poke = b.dataset.p;
+  save(UKEY, ui); renderChips(); renderStats(); renderList();
+});
+$("#sort").addEventListener("change", e => { ui[ui.tab==="prix"?"psort":"sort"] = e.target.value; save(UKEY, ui); renderList(); });
+let qt; $("#q").addEventListener("input", () => { clearTimeout(qt); qt = setTimeout(renderList, 150); });
+
+const LORD = {fr:0,en:1,ja:2};
+function filteredCards(){
+  const q = norm($("#q").value.trim());
+  return CARDS.filter(c => {
+    if (ui.tab!=="prix" && !ui.langs.includes(c.l)) return false;
+    if (!pokeOk(c)) return false;
+    if (ui.tab==="coll" && !isOwned(c)) return false;
+    if (ui.tab==="cards" && ui.missingOnly && isOwned(c)) return false;
+    if (q && !c.key.includes(q)) return false;
+    return true;
+  });
+}
+
+/* ---------- binder ---------- */
+function pocketHTML(c, opts={}){
+  const own = isOwned(c), im = imgOf(c), alt = !c.img && im;
+  const label = c.num || String(G.get(c.g).y);
+  return `<div class="pocket${own?" own":""}" role="button" tabindex="0" data-id="${esc(c.id)}" aria-pressed="${own}" aria-label="${esc(`${c.n}, ${LNAME[c.l]}, ${c.s}, ${c.v}`)}">
+    <span class="im">${im?`<img loading="lazy" decoding="async" src="${esc(thumb(im))}" alt=""${alt?' class="alt"':""}>`:`<span class="ph">${esc(c.n)}</span>`}
+      <span class="lg ${c.l}">${LTAG[c.l]}</span>
+      <span class="vt">${esc(label)}</span></span>
+    ${opts.noInfo?"":`<button class="info" data-info="${esc(c.id)}" aria-label="Fiche de la carte">i</button>`}
+    <span class="bk"><b>${esc(c.s)}</b>${priceOf(c)!=null?` · ${eur(priceOf(c))}`:""}</span>
+  </div>`;
+}
+function groupsOf(cards){
+  const m = new Map();
+  for (const c of cards){ if(!m.has(c.g)) m.set(c.g, []); m.get(c.g).push(c); }
+  for (const a of m.values()) a.sort((x,y)=> LORD[x.l]-LORD[y.l] || (x.o??0)-(y.o??0));
+  let gs = [...m.entries()].map(([gid, cs]) => ({g:G.get(gid), cs}));
+  const s = ui.sort;
+  if (s==="poke") gs.sort((a,b)=> (a.g.poke===b.g.poke?0:a.g.poke==="psy"?-1:1) || (a.g.cameo-b.g.cameo) || a.g.o-b.g.o);
+  else if (s==="set") gs.sort((a,b)=> a.g.t.localeCompare(b.g.t,"fr"));
+  else gs.sort((a,b)=> a.g.o-b.g.o);
+  return gs;
+}
+function pageHead(g){
+  const all = groupCards(g.id).filter(c=>ui.langs.includes(c.l)), own = all.filter(isOwned).length;
+  return `${own===all.length&&all.length?`<em>complète</em>`:`${own}/${all.length}`}`;
+}
+function renderList(){
+  const el = $("#list"), arr = filteredCards();
+  if (ui.tab==="prix"){ renderPrices(); return; }
+  if (!arr.length){
+    el.innerHTML = ui.tab==="coll" && !Object.keys(coll.owned).length
+      ? `<p class="empty">Votre collection est vide.<br>Ouvrez l'onglet Toutes les cartes et touchez celles que vous possédez.</p>`
+      : `<p class="empty">Aucune carte ne correspond à ces filtres.</p>`;
+    return;
+  }
+  let gs = groupsOf(arr);
+  if (ui.tab==="coll" && ui.sort==="added"){
+    const flat = [...arr].sort((a,b)=> (coll.owned[b.id]||"").localeCompare(coll.owned[a.id]||""));
+    el.innerHTML = `<div class="bpage"><div class="grid">${flat.map(c=>pocketHTML(c,{noInfo:true})).join("")}</div></div>`; return;
+  }
+  el.innerHTML = `<div class="pages">${gs.map(({g,cs}) => `<section class="bpage${g.cameo?" cameo":""}" data-g="${esc(g.id)}">
+      <h2><b style="font:inherit">${esc(g.t)}${g.cameo?`<i class="cm">caméo</i>`:""}</b> <span>${g.y} · ${pageHead(g)}</span></h2>
+      <p class="sub">${esc(g.s)}</p>
+      <div class="grid">${cs.map(c=>pocketHTML(c,{noInfo:ui.tab==="coll"})).join("")}</div></section>`).join("")}</div>`;
+}
+function refreshOne(id){
+  renderStats(); renderChips();
+  const c = BY_ID.get(id);
+  if (ui.tab==="coll" || ui.tab==="prix"){ renderList(); return; }
+  if (ui.missingOnly && isOwned(c)) { const old = document.querySelector(`.pocket[data-id="${CSS.escape(id)}"]`); if (old) old.remove(); }
+  else {
+    const old = document.querySelector(`#list .pocket[data-id="${CSS.escape(id)}"]`);
+    if (old){ const t = document.createElement("div"); t.innerHTML = pocketHTML(c); const nu = t.firstElementChild; old.replaceWith(nu); nu.classList.add("flash"); }
+  }
+  const h = document.querySelector(`.bpage[data-g="${CSS.escape(c.g)}"] h2 span`);
+  if (h) h.innerHTML = `${G.get(c.g).y} · ${pageHead(G.get(c.g))}`;
+}
+function setOwned(id, on){
+  if (on) coll.owned[id] = coll.owned[id] || today(); else delete coll.owned[id];
+  persist(); refreshOne(id);
+}
+function toggle(id){
+  const c = BY_ID.get(id), on = !isOwned(c); setOwned(id, on);
+  toast(on ? `${c.n} ${LTAG[c.l]} · ${c.v} ajoutée ✓` : `${c.n} ${LTAG[c.l]} · ${c.v} retirée`);
+}
+$("#list").addEventListener("click", e => {
+  const inf = e.target.closest("[data-info]"); if (inf){ e.stopPropagation(); openDetail(inf.dataset.info); return; }
+  const pr = e.target.closest(".prow"); if (pr){ openDetail(pr.dataset.id); return; }
+  const p = e.target.closest(".pocket"); if (!p) return;
+  if (ui.tab==="cards") toggle(p.dataset.id); else openDetail(p.dataset.id);
+});
+$("#list").addEventListener("keydown", e => {
+  if ((e.key==="Enter"||e.key===" ") && e.target.classList.contains("pocket")){ e.preventDefault(); e.target.click(); }
+});
+
+/* ---------- prices tab ---------- */
+function renderPrices(){
+  const q = norm($("#q").value.trim());
+  const pool = CARDS.filter(c => pokeOk(c) && (!q || c.key.includes(q)));
+  const sorter = arr => {
+    const s = ui.psort;
+    if (s==="date") return arr.sort((a,b)=> G.get(a.g).o-G.get(b.g).o || (a.o??0)-(b.o??0));
+    const k = s==="asc"?1:-1;
+    return arr.sort((a,b)=>{ const x=priceOf(a), y=priceOf(b); if(x==null&&y==null) return 0; if(x==null) return 1; if(y==null) return -1; return (x-y)*k; });
+  };
+  let own = 0, rest = 0, nop = 0;
+  for (const c of CARDS){ if (!ui.langs.includes(c.l) || !pokeOk(c)) continue; const p = priceOf(c); if (p==null){ nop++; continue; } if (isOwned(c)) own += p; else rest += p; }
+  const row = c => {
+    const p = priceOf(c), im = imgOf(c);
+    return `<button class="prow${isOwned(c)?" mine":""}" data-id="${esc(c.id)}">
+      ${im?`<img loading="lazy" src="${esc(thumb(im))}" alt="">`:`<span class="th"></span>`}
+      <span class="t"><b>${esc(c.n)} <span class="lg ${c.l}">${LTAG[c.l]}</span></b><small>${esc(c.s)}${c.num?` · ${esc(c.num)}`:""}${isOwned(c)?` · <i>possédée</i>`:""}</small></span>
+      <span class="r">${p==null?"—":eur(p)}<small>${esc(priceSrc(c))}</small></span></button>`;
+  };
+  const sec = (l, title) => { const a = pool.filter(c=>c.l===l && ui.langs.includes(l)); return a.length ? `<h3>${title} · ${a.length}</h3>${sorter(a).map(row).join("")}` : ""; };
+  $("#list").innerHTML = `<div class="psum">
+      <div><small>Ma collection</small><b>${eur(own)}</b></div>
+      <div><small>Reste à acheter</small><b>${eur(rest)}</b></div>
+      <div><small>Tout acheter</small><b>${eur(own+rest)}</b></div>
+    </div>
+    <div class="plist">${sec("fr","Cartes françaises")}${sec("en","Cartes anglaises (jamais sorties en français)")}${sec("ja","Cartes japonaises")}</div>
+    <p class="pnote">${SCRAPE_DATE?`« NM FR / JP » : moyenne des 5 offres Near Mint les moins chères dans la langue de la carte, relevées sur Cardmarket le ${new Date(SCRAPE_DATE).toLocaleDateString("fr-FR")} (hors 1re édition et reverse). `:""}« Guide des prix » : prix moyen 30 jours du guide public Cardmarket du ${new Date(SNAP_DATE).toLocaleDateString("fr-FR")}, toutes langues confondues pour une carte internationale (un produit japonais n'a que des offres japonaises).${nop?` ${nop} cartes sans prix.`:""}</p>`;
+}
+
+/* ---------- sheet ---------- */
+let current = null;
+function openSheet(html){
+  $("#sheetBody").innerHTML = html;
+  $("#scrim").hidden = false; $("#sheet").hidden = false;
+  requestAnimationFrame(()=>{ $("#scrim").classList.add("on"); $("#sheet").classList.add("on"); });
+  $("#sheet").scrollTop = 0; document.body.style.overflow = "hidden";
+}
+function closeSheet(){
+  current = null;
+  $("#scrim").classList.remove("on"); $("#sheet").classList.remove("on"); document.body.style.overflow = "";
+  setTimeout(()=>{ if(!$("#sheet").classList.contains("on")){ $("#scrim").hidden = true; $("#sheet").hidden = true; } }, 260);
+}
+$("#scrim").addEventListener("click", closeSheet);
+$("#closeBtn").addEventListener("click", closeSheet);
+document.addEventListener("keydown", e => { if (e.key==="Escape") closeSheet(); });
+
+function cmLink(c){ // product page filtered on the card's language, Near Mint or better
+  if (!c.cm) return null;
+  const lang = {fr:2, en:1, ja:7}[c.l];
+  return `https://www.cardmarket.com/fr/Pokemon/Products?idProduct=${c.cm}&language=${lang}&minCondition=2`;
+}
+function detailHTML(id){
+  const c = BY_ID.get(id), g = G.get(c.g), own = coll.owned[id], im = imgOf(c);
+  const p = priceOf(c), t = trendOf(c);
+  const sibs = groupCards(c.g).filter(x=>x.id!==id).sort((a,b)=>LORD[a.l]-LORD[b.l]);
+  return `<div class="hero">
+      <div class="art">${im?`<img src="${esc(large(im))}" alt="${esc(c.n)}">`:""}</div>
+      <div><div class="meta"><span class="lg ${c.l}">${LTAG[c.l]}</span> ${LNAME[c.l]} · ${c.y}</div>
+        <h3 id="sheetTitle">${esc(c.n)}</h3>
+        <div class="meta">${esc(g.t)}</div>
+        ${own?`<div class="meta">Ajoutée le ${new Date(own).toLocaleDateString("fr-FR")}</div>`:""}
+        ${!c.img&&im?`<p class="note">Image d'une autre langue : même illustration.</p>`:""}
+      </div>
+    </div>
+    <dl class="facts">
+      <dt>Set</dt><dd>${esc(c.s)}</dd>
+      <dt>Numéro</dt><dd>${esc(c.num||"—")}</dd>
+      <dt>Rareté</dt><dd>${esc(c.r||"—")}</dd>
+      <dt>Infos</dt><dd>${esc(g.s)}</dd>
+    </dl>
+    <button class="ownbtn${own?" is":""}" id="ownBtn">${own?"✓ Dans ma collection · retirer":"Ajouter à ma collection"}</button>
+    <div class="pricebox">
+      <div><div class="lbl">Prix Cardmarket</div><div class="big">${eur(p)}</div><div class="meta">${esc(priceSrc(c))}</div>${t!=null?`<div class="meta">Tendance toutes langues ${eur(t)}</div>`:""}</div>
+      ${cmLink(c)?`<a class="link" href="${esc(cmLink(c))}" target="_blank" rel="noopener">Offres ${LTAG[c.l]} sur Cardmarket ↗</a>`:""}
+    </div>
+    ${sibs.length?`<h4 style="margin:18px 0 0;font-size:14px">Même carte, autres versions</h4><div class="sibs">${sibs.map(s=>pocketHTML(s,{noInfo:true})).join("")}</div>`:""}`;
+}
+function openDetail(id){ current = id; openSheet(detailHTML(id)); }
+function rerenderDetail(){ if (!current) return; const st = $("#sheet").scrollTop; $("#sheetBody").innerHTML = detailHTML(current); $("#sheet").scrollTop = st; }
+$("#sheetBody").addEventListener("click", e => {
+  if (!current) return;
+  if (e.target.closest("#ownBtn")){ setOwned(current, !coll.owned[current]); rerenderDetail(); return; }
+  const p = e.target.closest(".sibs .pocket"); if (p){ openDetail(p.dataset.id); $("#sheet").scrollTop = 0; }
+});
+
+/* ---------- backup / menu ---------- */
+function exportText(){ return JSON.stringify({app:"psyditto", v:1, date:today(), owned:coll.owned}); }
+function openMenu(){
+  current = null;
+  const n = Object.keys(coll.owned).length;
+  openSheet(`<div class="panel">
+    <h3>Sauvegarde</h3>
+    <p>Votre collection (${n} carte${n>1?"s":""}) est enregistrée sur cet appareil, dans ce navigateur. Faites une copie de temps en temps, et avant de changer de téléphone.</p>
+    <div class="btnrow"><button class="btn" id="expFile">Télécharger la sauvegarde</button><button class="btn" id="expCopy">Copier le texte</button></div>
+    <h4>Restaurer</h4>
+    <p>Choisissez un fichier de sauvegarde ou collez son texte.</p>
+    <div class="btnrow"><label class="btn" style="display:inline-flex;align-items:center">Choisir un fichier<input type="file" id="impFile" accept=".json,application/json,text/plain" hidden></label></div>
+    <textarea id="impText" placeholder='{"app":"psyditto",…}' style="margin-top:8px"></textarea>
+    <div class="btnrow" style="margin-top:8px"><button class="btn" id="impGo">Restaurer depuis le texte</button></div>
+    <h4>Langues</h4>
+    <p>Touchez une langue pour l'afficher ou la cacher. Double-touchez-la pour n'afficher qu'elle.</p>
+    <h4>Prix</h4>
+    <p>Prix par langue : moyenne des 5 offres Near Mint les moins chères sur Cardmarket, filtrées sur la langue de la carte (français ou japonais), hors 1re édition et reverse. Sinon : prix moyen 30 jours du guide des prix public Cardmarket du ${new Date(SNAP_DATE).toLocaleDateString("fr-FR")}.</p>
+    <h4>Sources</h4>
+    <p>Cartes : TCGdex et Cardmarket. Caméos : base communautaire de RotomAmiti (« Cameo Pokémon Card Database »), images Bulbapedia. Une case par carte (version normale), sans les réimpressions japonaises d'une même illustration ni les cartes Jumbo, chinoises, coréennes, indonésiennes et thaïes.</p>
+    <h4>Installer sur le téléphone</h4>
+    <p>iPhone : dans Safari, bouton Partager, puis « Sur l'écran d'accueil ». Android : menu ⋮, puis « Ajouter à l'écran d'accueil ».</p>
+    <h4>Tout effacer</h4>
+    <div class="btnrow"><button class="btn danger" id="resetBtn">Effacer ma collection</button></div>
+  </div>`);
+}
+$("#menuBtn").addEventListener("click", openMenu);
+function importData(txt){
+  try {
+    const d = JSON.parse(txt); if (!d || typeof d.owned!=="object") throw 0;
+    const owned = {}; let skipped = 0;
+    for (const [k,v] of Object.entries(d.owned)){ if (BY_ID.has(k)) owned[k] = typeof v==="string" ? v : today(); else skipped++; }
+    coll.owned = owned; persist(); renderAll(); closeSheet();
+    toast(`${Object.keys(owned).length} cartes restaurées${skipped?` (${skipped} inconnues ignorées)`:""}`);
+  } catch { toast("Ce texte n'est pas une sauvegarde valide"); }
+}
+let resetArmed = 0;
+$("#sheetBody").addEventListener("click", async e => {
+  const id = e.target.id;
+  if (id==="expFile"){
+    const blob = new Blob([exportText()], {type:"application/json"}); const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = `psykokwak-metamorph-collection-${today()}.json`; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+  }
+  if (id==="expCopy"){
+    try { await navigator.clipboard.writeText(exportText()); toast("Sauvegarde copiée"); }
+    catch { const t=$("#impText"); t.value = exportText(); t.select(); toast("Texte sélectionné : copiez-le"); }
+  }
+  if (id==="impGo") importData($("#impText").value);
+  if (id==="resetBtn"){
+    if (Date.now()-resetArmed < 4000){ coll.owned = {}; persist(); renderAll(); closeSheet(); toast("Collection effacée"); }
+    else { resetArmed = Date.now(); e.target.textContent = "Touchez encore pour confirmer"; setTimeout(()=>{ if(e.target.isConnected) e.target.textContent="Effacer ma collection"; },4000); }
+  }
+});
+$("#sheetBody").addEventListener("change", e => {
+  if (e.target.id==="impFile" && e.target.files[0]){ const r = new FileReader(); r.onload = () => importData(r.result); r.readAsText(e.target.files[0]); }
+});
+
+/* ---------- misc ---------- */
+let tt; function toast(t){ const el=$("#toast"); el.textContent=t; el.classList.add("on"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("on"),1800); }
+
+/* ---------- long press: enlarge a card ---------- */
+const HOLD_MS = 420;
+let hold = null, swallowClick = false;
+function zoomHTML(c){
+  const im = imgOf(c), p = priceOf(c), own = isOwned(c);
+  return `<button class="zx" data-zclose aria-label="Fermer">✕</button>
+    <div class="zc">${im?`<img src="${esc(large(im))}" alt="${esc(c.n)}">`:`<span class="ph">${esc(c.n)}<br>Pas d'image</span>`}</div>
+    <div class="zi">
+      <h3><span class="lg ${c.l}">${LTAG[c.l]}</span>${esc(c.n)}</h3>
+      <p><b>${esc(c.s)}</b>${c.num?` · ${esc(c.num)}`:""}</p>
+      <p>${esc(G.get(c.g).s)}${c.r&&c.r!=="—"?` · ${esc(c.r)}`:""}</p>
+      ${!c.img&&im?`<p>Image d'une autre langue : même illustration.</p>`:""}
+      ${p!=null?`<p><span class="zp">${eur(p)}</span> ${esc(priceSrc(c))}</p>`:""}
+      <div class="zb"><button data-zown class="${own?"is":""}">${own?"✓ Dans ma collection":"Ajouter à ma collection"}</button><button data-zinfo>Fiche complète</button></div>
+    </div>`;
+}
+let zoomId = null;
+function openZoom(id){
+  zoomId = id;
+  let z = $("#zoom");
+  if (!z){ z = document.createElement("div"); z.id = "zoom"; z.className = "zoom"; z.setAttribute("role","dialog"); z.setAttribute("aria-modal","true"); document.body.appendChild(z); }
+  z.innerHTML = zoomHTML(BY_ID.get(id)); z.hidden = false;
+  requestAnimationFrame(()=>z.classList.add("on"));
+}
+function closeZoom(){
+  const z = $("#zoom"); if (!z || z.hidden) return;
+  zoomId = null; z.classList.remove("on"); setTimeout(()=>{ if(!z.classList.contains("on")) z.hidden = true; }, 200);
+}
+function cancelHold(){ if (hold){ clearTimeout(hold.t); hold.p.classList.remove("holding"); hold = null; } }
+document.addEventListener("pointerdown", e => {
+  if (e.button > 0) return;
+  const p = e.target.closest(".pocket"); if (!p || e.target.closest(".info")) return;
+  cancelHold(); swallowClick = false;
+  p.classList.add("holding");
+  hold = {p, x:e.clientX, y:e.clientY, t:setTimeout(()=>{
+    p.classList.remove("holding"); swallowClick = true; hold = null;
+    try { navigator.vibrate && navigator.vibrate(12); } catch {}
+    openZoom(p.dataset.id);
+  }, HOLD_MS)};
+});
+document.addEventListener("pointermove", e => { if (hold && Math.hypot(e.clientX-hold.x, e.clientY-hold.y) > 10) cancelHold(); }, {passive:true});
+["pointerup","pointercancel","scroll"].forEach(ev => document.addEventListener(ev, cancelHold, {passive:true, capture:true}));
+document.addEventListener("click", e => { // the click that ends a long press must not toggle the card
+  if (swallowClick && e.target.closest(".pocket")){ e.stopPropagation(); e.preventDefault(); }
+  swallowClick = false;
+}, true);
+document.addEventListener("contextmenu", e => { if (e.target.closest(".pocket")) e.preventDefault(); });
+document.addEventListener("click", e => {
+  const z = $("#zoom"); if (!z || z.hidden || !z.contains(e.target)) return;
+  if (e.target.closest("[data-zown]")){ setOwned(zoomId, !coll.owned[zoomId]); if (current===zoomId) rerenderDetail(); z.innerHTML = zoomHTML(BY_ID.get(zoomId)); return; }
+  if (e.target.closest("[data-zinfo]")){ const id = zoomId; closeZoom(); openDetail(id); return; }
+  if (e.target.closest("[data-zclose]") || !e.target.closest(".zb,.zi h3")) closeZoom();
+});
+document.addEventListener("keydown", e => { if (e.key==="Escape") closeZoom(); });
+
+function renderAll(){ renderStats(); renderChips(); renderList(); }
+renderStats(); setTab(ui.tab);
+$("#sub").textContent = `${GROUPS.length} cartes · ${CARDS.length} versions · ${LANGS.map(l=>l[2]).join(" · ")}`;
+</script>
+</body>
+</html>

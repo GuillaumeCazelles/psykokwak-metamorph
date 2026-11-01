@@ -1,0 +1,4 @@
+# Cardmarket price guide, 15 MB, downloaded by build.py
+build/src/pg.json
+__pycache__/
+.claude/
