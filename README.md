@@ -6,7 +6,7 @@ Suivi de collection des cartes Psykokwak et Métamorph du JCC Pokémon, en fran�
 
 - Toucher une carte l'ajoute à la collection ; la toucher encore la retire. Maintenir appuyé l'agrandit.
 - Filtres par langue (double-toucher une langue pour n'afficher qu'elle), par Pokémon, caméos, cartes manquantes.
-- Onglet Prix : prix Cardmarket par langue (moyenne des 5 offres Near Mint les moins chères en français ou en japonais), sinon prix moyen 30 jours du guide des prix Cardmarket.
+- Onglet Prix : prix Cardmarket par langue (moyenne des 5 offres Near Mint les moins chères dans la langue de la carte), sinon prix moyen 30 jours du guide des prix Cardmarket.
 - La collection est enregistrée dans le navigateur de chaque appareil ; sauvegarde et restauration depuis le menu ☰.
 - Sur iPhone : Safari → Partager → « Sur l'écran d'accueil ».
 
@@ -25,7 +25,7 @@ python build.py   # télécharge le guide des prix Cardmarket et régénère ../
 |---|---|
 | `build/template.html` | l'app (HTML, CSS, JS), dérivée de Ponyta & Galopa |
 | `build/src/cards.json` | une entrée par carte : données TCGdex, produit Cardmarket FR/EN et produit japonais équivalent |
-| `build/src/prices.json` | prix relevés sur Cardmarket par langue (`idProduct_langue`, 2 = français, 7 = japonais) |
+| `build/src/prices.json` | prix relevés sur Cardmarket par langue (`idProduct_langue`, 1 = anglais, 2 = français, 7 = japonais) |
 | `img/` | images des cartes absentes de TCGdex (exclusivités japonaises, promos récentes, caméos) |
 
 ## Sources
